@@ -14,7 +14,7 @@ HOW-TO
 ==================
 
 
-1. prepare your data, all scans have to be linearly registered to stereotaxic space and brain should be extracted. Also intensities should be normalized so that white matter is around 100.
+-  prepare your data, all scans have to be linearly registered to stereotaxic space and brain should be extracted. Also intensities should be normalized so that white matter is around 100.
 
 One use the standard pipeline ( https://github.com/vfonov/bic-pipelines )
 
@@ -27,7 +27,7 @@ After the files are prepared, create a text file with following format:
 
 assuming that you stored it into the file subjects.lst
 
-2. to run the script :
+-  to run the script :
 
 ```shell
     build_average_model.rb \
