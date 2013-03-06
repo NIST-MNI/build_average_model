@@ -1,4 +1,4 @@
-# MNI BATCH Ruby routines
+# SGE BATCH Ruby routines to execute processes using Sun Grig Engine
 # Author::    Vladimir S. Fonov  
  
 require 'tempfile'
@@ -7,7 +7,7 @@ require 'fileutils'
 
 def do_cmd(*a)
   b=Array.new
-  a.each{ |el| b<<el.to_s()}
+  a.each{ |el| b << el.to_s()}
 	if !system(*b)
     raise "DIED: #{a.join(' ')}"
 	end
@@ -123,8 +123,8 @@ class Qjob
     end
   end
   
-  def <<(c)
-    @commands<<c
+  def << (c)
+    @commands << c
     self
   end
 

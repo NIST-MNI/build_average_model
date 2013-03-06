@@ -1,5 +1,5 @@
 #! /usr/bin/env ruby
-require 'BIC_BATCH'
+require 'SGE_BATCH'
 require 'optparse'
 require 'ostruct'
 require 'pathname'
