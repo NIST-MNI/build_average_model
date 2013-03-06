@@ -30,14 +30,15 @@ assuming that you stored it into the file subjects.lst
 2. to run the script :
 
     build_average_model.rb \
-    -f 32,4,16,4,8,4,4,4,2,4 \
-    -q <SGE queue> \
-    --model <initial anatomical model> \
-    --model-mask <initial anatomical model mask> \
-    --list subjects.lst \
-    --spline \
-    -o <model directory>
+      -f 32,4,16,4,8,4,4,4,2,4 \
+      -q <SGE queue> \
+      --model <initial anatomical model> \
+      --model-mask <initial anatomical model mask> \
+      --list subjects.lst \
+      --spline \
+      -o <model directory>
 
+      
 this script will submit a lot of jobs on the SGE, using ```<SGE queue>``` and the output will be in the directory ```<model directory>```, final result will be
 ```<model directory>/avg_20.mnc``` for the anatomical average and ```<model directory>/avg_20_mask.mnc``` for the brain mask.
 
