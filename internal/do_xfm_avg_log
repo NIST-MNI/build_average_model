@@ -1,0 +1,23 @@
+#! /bin/bash
+tempdir=${TMPDIR}/$$
+trap "rm -rf $tempdir" 0 1 2 15
+mkdir -p $tempdir
+
+set -e -E -v
+
+unset MINC_COMPRESS 
+#unfortunately MINC2 in compression mode is very slow for _grid processing
+#todo: fix it later
+out=$2
+
+#xfmavg $(cat $1) $2
+for i in $(cat $1);do cat $i>>$tempdir/log_list.lst;done
+mincaverage -float -max_buffer_size_in_kb 100000 -filelist $tempdir/log_list.lst $tempdir/avg_log.mnc
+grid_proc $tempdir/avg_log.mnc ${out/.xfm/_grid_0.mnc} --exp
+grid=$(basename ${out/.xfm/_grid_0.mnc})
+echo -e "MNI Transform File\n\nTransform_Type = Linear;\n\
+Linear_Transform =\n 1 0 0 0\n 0 1 0 0\n 0 0 1 0;\n\
+Transform_Type = Grid_Transform;\nDisplacement_Volume = $grid;\n" > $out
+
+
+

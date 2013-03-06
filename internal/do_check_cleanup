@@ -1,0 +1,6 @@
+#! /bin/bash
+set -e -E -v
+
+if [ -e $1 ];then 
+  cat $2 | xargs rm -f
+fi

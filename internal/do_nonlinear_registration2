@@ -1,0 +1,49 @@
+#! /bin/bash
+set -e -E -v
+tempdir=${TMPDIR}/$$
+trap "rm -rf $tempdir" 0 1 2 15
+mkdir -p $tempdir
+
+#Usage <program> <file> <model> <file_mask> <model_mask> <level> <prev_xfm> <output.xfm> <output_invert.xfm>  
+
+input=$1
+model=$2
+input_mask=$3
+model_mask=$4
+level=$5
+prev_xfm=$6
+input_model_xfm=$7
+output_xfm=$8
+
+unset MINC_COMPRESS 
+#unfortunately MINC2 in compression mode is very slow for _grid processing
+#todo: fix it later
+
+if [ "$prev_xfm" != "none"  -a "$input_model_xfm" != "none" ] ; then 
+#compensate for the new model estimate here
+ xfminvert $input_model_xfm $tempdir/inv_model.xfm
+ xfmconcat $tempdir/inv_model.xfm $prev_xfm $tempdir/init.xfm
+ xfm_normalize.pl $tempdir/init.xfm $tempdir/init_n.xfm --like $model --step $level
+ nlfit_l $model $input $tempdir/left_nl.xfm  -source_mask $model_mask -target_mask $input_mask -level $level  \
+         -init_xfm $tempdir/init_n.xfm
+         
+else
+	nlfit_s $model $input $tempdir/left_nl.xfm -source_mask $model_mask -target_mask $input_mask -level $level
+fi
+
+
+#xfmconcat         $tempdir/identity.xfm $tempdir/left_nl.xfm $output_xfm
+#xfminvert         $output_xfm $tempdir/output_inv.xfm
+#xfm_normalize.pl  $tempdir/output_inv.xfm $output_inv --like $model --step $level
+
+if [ "$input_model_xfm" != "none" ] ; then 
+  xfmconcat         $input_model_xfm $tempdir/left_nl.xfm  $tempdir/output.xfm
+else
+  param2xfm         $tempdir/identity.xfm
+  xfmconcat         $tempdir/identity.xfm $tempdir/left_nl.xfm $tempdir/output.xfm
+fi
+
+xfm_normalize.pl   $tempdir/output.xfm $output_xfm --like $model --step $level
+#xfminvert          $output_xfm  $tempdir/inv.xfm
+#itk_resample       $input --like $model --transform $tempdir/inv.xfm $output_minc
+#mincresample       $input_mask -like $model -nearest -transform $tempdir/inv.xfm $output_mask

@@ -1,0 +1,20 @@
+#! /bin/bash
+set -e -E -v
+
+tempdir=${TMPDIR}/$$
+trap "rm -rf $tempdir" 0 1 2 15
+mkdir -p $tempdir
+
+MINC_COMPRESS_SAVE=$MINC_COMPRESS
+unset MINC_COMPRESS 
+#speed up temp process 
+
+mincaverage -float -filelist  $1 $tempdir/avg.mnc -max_buffer_size_in_kb 131072
+mincresample -nearest -use_input_sampling -transform $(dirname $2)/flip.xfm $tempdir/avg.mnc $tempdir/avg2.mnc
+mincaverage -float $tempdir/avg.mnc $tempdir/avg2.mnc $tempdir/avg3.mnc
+
+if [ x$MINC_COMPRESS_SAVE != x ]; then export MINC_COMPRESS=$MINC_COMPRESS_SAVE;fi
+minccalc -expression "A[0]>0.5?1:0" -byte $tempdir/avg3.mnc $2
+
+
+

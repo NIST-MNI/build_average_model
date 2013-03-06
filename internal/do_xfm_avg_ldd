@@ -1,0 +1,11 @@
+#! /bin/bash
+set -e -E -v
+
+unset MINC_COMPRESS 
+#unfortunately MINC2 in compression mode is very slow for _grid processing
+#todo: fix it later
+
+mincaverage -float -max_buffer_size_in_kb 100000 -filelist $1 $2
+
+
+

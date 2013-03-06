@@ -1,0 +1,5 @@
+#! /bin/bash
+set -e -E -v
+
+mincresample -nearest $1 $2 -use_input_sampling -transform $(dirname $2)/flip.xfm
+

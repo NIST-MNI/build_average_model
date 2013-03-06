@@ -1,0 +1,11 @@
+#! /bin/bash
+set -e -E -v
+
+tempdir=${TMPDIR}/$$
+trap "rm -rf $tempdir" 0 1 2 15
+mkdir -p $tempdir
+
+mincbet $1 $tempdir/${$} -m -n
+mincreshape -byte $tempdir/${$}_mask.mnc $2
+
+mincresample -nearest -use_input_sampling -transform $(dirname $3)/flip.xfm $2 $3

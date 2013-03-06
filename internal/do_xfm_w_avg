@@ -1,0 +1,8 @@
+#! /bin/bash
+set -e -E -v
+
+unset MINC_COMPRESS 
+#unfortunately MINC2 in compression mode is very slow for _grid processing
+#todo: fix it later
+
+xfm_w_average.pl --list $1 $2 --bandwidth $3 --out $4

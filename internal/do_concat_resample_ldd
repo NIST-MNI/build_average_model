@@ -1,0 +1,37 @@
+#! /bin/bash
+set -e -E -v
+
+tempdir=${TMPDIR}/$$
+trap "rm -rf $tempdir" 0 1 2 15
+mkdir -p $tempdir
+
+input_log=$1
+file=$2
+log_avg=$3
+model=$4
+file_mask=$5
+output_log=$6
+output_minc=$7
+output_mask=$8
+output_flip_minc=$9
+
+export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
+
+MINC_COMPRESS_SAVE=$MINC_COMPRESS
+#unset MINC_COMPRESS 
+#unfortunately MINC2 in compression mode is very slow for _grid processing
+#todo: fix it later
+
+#xfmconcat $input_xfm $xfm_avg $output_xfm
+minccalc -express 'A[0]-A[1]' $input_log $log_avg $output_log
+
+#if [ x$MINC_COMPRESS_SAVE != x ]; then export MINC_COMPRESS=$MINC_COMPRESS_SAVE;fi
+
+log_resample --like $model --log_transform $output_log $file $output_minc
+log_resample --like $model --log_transform $output_log $file_mask $output_mask --order 0
+
+minc_pretty_pic.pl $output_minc ${output_minc}_qc.jpg --overlay $output_mask
+
+if [ "$output_flip_minc" != "" ]; then 
+  mincresample -use_input_sampling -transformation $(dirname $output_xfm)/flip.xfm $output_minc $output_flip_minc -nearest
+fi

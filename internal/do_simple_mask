@@ -1,0 +1,6 @@
+#! /bin/bash
+set -e -E -v
+
+itk_morph --bimodal --exp "D[4]" $1 $2
+
+

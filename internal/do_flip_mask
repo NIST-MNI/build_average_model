@@ -1,0 +1,5 @@
+#! /bin/bash
+set -e -E -v
+
+itk_morph --bimodal --exp "D[4]" $1 $2
+mincresample -nearest -use_input_sampling -transform $(dirname $3)/flip.xfm $2 $3

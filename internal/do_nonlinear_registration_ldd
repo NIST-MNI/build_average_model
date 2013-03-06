@@ -1,0 +1,60 @@
+#! /bin/bash
+set -e -E 
+tempdir=${TMPDIR}/$$
+trap "rm -rf $tempdir" 0 1 2 15
+mkdir -p $tempdir
+
+#Usage <program> <file> <model> <file_mask> <model_mask> <level> <prev_log> <output_log>
+
+input=$1
+model=$2
+input_mask=$3
+model_mask=$4 
+level=$5
+prev_log=$6
+output_log=$7
+iterations=$8
+
+shift 8
+
+options="$@"
+
+export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
+
+
+if [ -z $iterations ]; then iterations=20;fi
+
+#unset MINC_COMPRESS 
+#unfortunately MINC2 in compression mode is very slow for _grid processing
+#todo: fix it later
+
+prog=0x0x0 #dumb program
+
+case "$level" in 
+ 32.0|32) prog=${iterations}x0x0x0x0x0 ;;
+ 16.0|16) prog=${iterations}x0x0x0x0 ;;
+ 8.0|8)  prog=${iterations}x0x0x0 ;;
+ 4.0|4)  prog=${iterations}x0x0 ;;
+ 2.0|2)  prog=${iterations}x0 ;;
+ 1.0|1)  prog=${iterations} ;;
+esac 
+
+echo level $level, program $prog
+
+if [ "$prev_log" != "none" ] ; then 
+	LogDomainDemonsRegistration \
+	-f $input -m $model \
+	--fixed-mask $input_mask --moving-mask $model_mask \
+	-i $prog \
+	--input-field $prev_log \
+	--outputVel-field $output_log \
+  $options
+else
+	LogDomainDemonsRegistration \
+	-f $input -m $model \
+	--fixed-mask $input_mask --moving-mask $model_mask \
+	-i $prog \
+	--outputVel-field $output_log \
+	$options
+fi
+

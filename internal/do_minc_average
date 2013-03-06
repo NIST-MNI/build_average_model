@@ -1,0 +1,18 @@
+#! /bin/bash
+set -e -E -v
+
+tempdir=${TMPDIR}/$$
+trap "rm -rf $tempdir" 0 1 2 15
+mkdir -p $tempdir
+
+MINC_COMPRESS_SAVE=$MINC_COMPRESS
+unset MINC_COMPRESS 
+#speed up temp process 
+
+mincaverage -float -filelist $1 $tempdir/avg.mnc -sdfile $tempdir/sd.mnc -max_buffer_size_in_kb 131072
+# but, unfortunately the nonlinear minctracc can't work with float!
+
+if [ x$MINC_COMPRESS_SAVE != x ]; then export MINC_COMPRESS=$MINC_COMPRESS_SAVE;fi
+
+mincreshape -short $tempdir/avg.mnc $2
+mincreshape -short $tempdir/sd.mnc $3
