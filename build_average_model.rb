@@ -479,9 +479,17 @@ begin
               delay=(rand*30).to_i
               e<<['sleep',delay]
             end
+            
             resample_script='do_concat_resample'
-            if spline 
+            unless disable_linear && non_linear_on
+              resample_script='do_concat_resample_lin'
+            end
+            
+            if spline
               resample_script='do_concat_resample_itk'
+              unless disable_linear && non_linear_on
+                resample_script='do_concat_resample_itk_lin'
+              end
             end
             if symmetric
               e<<[bin_dir+resample_script,input,file,xfm_avg,
