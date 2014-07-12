@@ -25,10 +25,9 @@ xfmconcat $input_xfm $xfm_avg $output_xfm
 if [ x$MINC_COMPRESS_SAVE != x ]; then export MINC_COMPRESS=$MINC_COMPRESS_SAVE;fi
 
 mincresample -like $model -transformation $output_xfm $file $output_minc
+mincresample -like $model -transformation $output_xfm $file_mask $output_mask -nearest
 
 minc_qc.pl $output_minc --mask $output_mask ${output_minc}.jpg
-
-mincresample -like $model -transformation $output_xfm $file_mask $output_mask -nearest
 
 if [ "$output_flip_minc" != "" ]; then 
   mincresample -use_input_sampling -transformation $(dirname $output_xfm)/flip.xfm $output_minc $output_flip_minc -nearest
