@@ -4,7 +4,7 @@ tempdir=${TMPDIR}/$$
 trap "rm -rf $tempdir" 0 1 2 15
 mkdir -p $tempdir
 
-#Usage <program> <file> <file_flip> <model> <file_mask> <file_flip_mask> <model_mask> <level> <prev_xfm> <output.xfm> <output_invert.xfm> <output_invert_flip.xfm> 
+#Usage <program> <file> <file_flip> <model> <file_mask> <file_flip_mask> <model_mask> <level> <prev_xfm> <output.xfm> <output_invert.xfm> <output_invert_flip.xfm> <start> 
 
 input=$1
 input_flip=$2
@@ -17,6 +17,7 @@ prev_xfm=$8
 output=$9
 output_inv=${10}
 output_i_flip=${11}
+start=${12}
 
 unset MINC_COMPRESS 
 #unfortunately MINC2 in compression mode is very slow for _grid processing
@@ -40,9 +41,10 @@ if [ ! -e $output ]; then
   nlfit_l $input_flip $model $tempdir/right_nl.xfm -source_mask $input_flip_mask -target_mask $model_mask \
      -level $level -init_xfm $tempdir/prev_flip.xfm  -work_dir $tempdir
  else
-  nlfit_s $input $model $tempdir/left_nl.xfm -source_mask $input_mask -target_mask $model_mask -level $level
+  nlfit_s $input $model $tempdir/left_nl.xfm -source_mask $input_mask -target_mask $model_mask -level $level -start $start
+  
   nlfit_s $input_flip $model $tempdir/right_nl.xfm -source_mask $input_flip_mask -target_mask $model_mask \
-     -level $level -work_dir $tempdir 
+     -level $level -work_dir $tempdir -start $start
  fi
 
  xfm_normalize.pl $tempdir/left_nl.xfm $tempdir/output_left.xfm -like $model --step $level

@@ -394,7 +394,7 @@ begin
                 e<<[bin_dir+'do_sym_nonlinear_registration', file,fliped, cur_model, 
                     file_mask,fliped_mask, 
                     cur_model_mask,step,prev_xfm,
-                    output,output_i,output_i+'.flip.xfm']
+                    output,output_i,output_i+'.flip.xfm', step*4]
                     
                 cleanup_list << output_i+'.flip.xfm'
                 cleanup_list << output_i+'.flip_grid_0.mnc'
@@ -407,7 +407,7 @@ begin
                 else
                 e << [bin_dir+'do_nonlinear_registration', file, 
                       cur_model, file_mask, cur_model_mask, 
-                      step, prev_xfm, output, output_i]
+                      step, prev_xfm, output, output_i, step*4 ]
                 end
               end
               #this will be produced by xfmavg

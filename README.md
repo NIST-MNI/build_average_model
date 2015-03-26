@@ -27,6 +27,8 @@ After the files are prepared, create a text file with following format:
 assuming that you stored it into the file subjects.lst
 
 -  to run the script :
+  setup ```RUBYLIB``` environment variable to point to the location of script
+  then
 
 ```shell
     build_average_model.rb \
