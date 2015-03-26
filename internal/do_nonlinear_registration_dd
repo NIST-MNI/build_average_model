@@ -1,8 +1,8 @@
 #! /bin/bash
 set -e -E 
-tempdir=${TMPDIR}/$$
+tempdir=$(mktemp -d --tmpdir)
 trap "rm -rf $tempdir" 0 1 2 15
-mkdir -p $tempdir
+
 
 #Usage <program> <file> <model> <file_mask> <model_mask> <level> <prev_xfm> <output.xfm> <output_invert.xfm>  
 

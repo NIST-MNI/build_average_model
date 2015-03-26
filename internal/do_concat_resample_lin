@@ -1,9 +1,9 @@
 #! /bin/bash
 set -e -E -v
 
-tempdir=${TMPDIR}/$$
+tempdir=$(mktemp -d --tmpdir)
 trap "rm -rf $tempdir" 0 1 2 15
-mkdir -p $tempdir
+
 
 input_xfm=$1
 file=$2
