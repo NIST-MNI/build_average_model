@@ -12,8 +12,6 @@ Relies on tools from minc_toolkit from https://github.com/BIC-MNI/minc-toolkit
 
 HOW-TO
 ==================
-
-
 -  prepare your data, all scans have to be linearly registered to stereotaxic space and brain should be extracted. Also intensities should be normalized so that white matter is around 100.
 One use the standard pipeline ( https://github.com/vfonov/bic-pipelines )
 
@@ -44,3 +42,6 @@ assuming that you stored it into the file subjects.lst
 this script will submit a lot of jobs on the SGE, using ```<SGE queue>``` and the output will be in the directory ```<model directory>```, final result will be
 ```<model directory>/avg_20.mnc``` for the anatomical average and ```<model directory>/avg_20_mask.mnc``` for the brain mask.
 
+UPDATE
+==================
+Method of building average anatomical model is re-implemented in python, see ( https://github.com/vfonov/nist_mni_pipelines ), see `iplScoopGenerateModel.py` , and example `examples/synthetic_tests/test_model_creation/scoop_test_nl_sym.py`
