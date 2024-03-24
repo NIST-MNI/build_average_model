@@ -44,4 +44,4 @@ this script will submit a lot of jobs on the SGE, using ```<SGE queue>``` and th
 
 UPDATE
 ==================
-Method of building average anatomical model is re-implemented in python, see ( https://github.com/vfonov/nist_mni_pipelines ), see `iplScoopGenerateModel.py` , and example `examples/synthetic_tests/test_model_creation/scoop_test_nl_sym.py`
+Method of building average anatomical model is re-implemented in python, see ( https://github.com/vfonov/nist_mni_pipelines ), see `ipl_generate_model.py` , and example `examples/synthetic_tests/test_model_creation/test_nl_sym.py`
